@@ -4,7 +4,7 @@ const products = [
     name: 'Nebula LED Lamp',
     price: 129.0,
     description: 'Ambient LED lamp with programmable gradients, voice and app control. Minimal aluminium body with frosted diffuser for soft, uniform light.',
-    image: 'https://via.placeholder.com/600x400?text=Nebula+LED+Lamp',
+    imageUrl: '/photo/lampe.jpg',
     stock: 12,
     category: 'Lighting'
   },
@@ -13,7 +13,7 @@ const products = [
     name: 'Aero Mechanical Keyboard',
     price: 199.0,
     description: 'Compact 75% mechanical keyboard with hot-swappable switches, aluminum case and customizable per-key RGB effects.',
-    image: 'https://via.placeholder.com/600x400?text=Aero+Mechanical+Keyboard',
+    imageUrl: '/photo/keyboard.jpg',
     stock: 7,
     category: 'Desk Setup'
   },
@@ -22,7 +22,7 @@ const products = [
     name: 'Horizon Ultra-Wide Monitor',
     price: 549.0,
     description: '34" curved ultra-wide display, 3440x1440, 100Hz refresh, minimal bezel for immersive work and play.',
-    image: 'https://via.placeholder.com/600x400?text=Horizon+Ultra-Wide+Monitor',
+    imageUrl: '/photo/Vertex Monitor Stand.jpg',
     stock: 4,
     category: 'Desk Setup'
   },
@@ -31,7 +31,7 @@ const products = [
     name: 'Orbit Wireless Charger',
     price: 49.0,
     description: 'Low-profile wireless charger with magnetic alignment and ambient glow to indicate charging state.',
-    image: 'https://via.placeholder.com/600x400?text=Orbit+Wireless+Charger',
+    imageUrl: '/photo/Orbit Wireless Charger.jpg',
     stock: 25,
     category: 'Accessories'
   },
@@ -40,7 +40,7 @@ const products = [
     name: 'Minimalist Desk Stand',
     price: 89.0,
     description: 'Adjustable anodized aluminium stand for laptops and tablets — sleek, sturdy, travel-friendly.',
-    image: 'https://via.placeholder.com/600x400?text=Minimalist+Desk+Stand',
+    imageUrl: '/photo/lamping2.webp',
     stock: 10,
     category: 'Accessories'
   }

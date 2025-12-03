@@ -7,7 +7,7 @@ const products = [
     price: 89.0,
     description: 'Sculptural desk lamp with gradient LED panel and touch dimmer. Warm-to-cool color temperature with memory presets.',
     category: 'lighting',
-    imageUrl: 'https://picsum.photos/400/300?random=1',
+    imageUrl: '/photo/lampe.jpg',
     stock: 12
   },
   {
@@ -16,7 +16,7 @@ const products = [
     price: 199.0,
     description: 'Low-profile mechanical keyboard with haptic feedback, programmable layers and per-key RGB. Aluminum frame.',
     category: 'desk',
-    imageUrl: 'https://picsum.photos/400/300?random=2',
+    imageUrl: '/photo/keyboard.jpg',
     stock: 7
   },
   {
@@ -25,7 +25,7 @@ const products = [
     price: 249.99,
     description: 'Slim soundbar with spatial audio simulation, wireless subwoofer support and adaptive room EQ.',
     category: 'audio',
-    imageUrl: 'https://picsum.photos/400/300?random=3',
+    imageUrl: '/photo/enceinte.jpg',
     stock: 5
   },
   {
@@ -34,7 +34,7 @@ const products = [
     price: 49.5,
     description: 'Magnetic fast wireless charger with ambient glow and anti-slip surface. Works with Qi devices.',
     category: 'accessories',
-    imageUrl: 'https://picsum.photos/400/300?random=4',
+    imageUrl: '/photo/Orbit Wireless Charger.jpg',
     stock: 24
   },
   {
@@ -43,7 +43,7 @@ const products = [
     price: 329.0,
     description: 'Ultra-thin secondary display with holographic finish, USB-C powered and adjustable tilt.',
     category: 'desk',
-    imageUrl: 'https://picsum.photos/400/300?random=5',
+    imageUrl: '/photo/Holopad.jpg',
     stock: 4
   },
   {
@@ -52,7 +52,7 @@ const products = [
     price: 39.99,
     description: 'Modular LED strip with app-controlled gradients, synchronizes with audio and animations.',
     category: 'lighting',
-    imageUrl: 'https://picsum.photos/400/300?random=6',
+    imageUrl: '/photo/Lumen LED Strip.jpg',
     stock: 40
   },
   {
@@ -61,7 +61,7 @@ const products = [
     price: 119.0,
     description: 'Compact spherical speaker delivering 360° sound with deep bass and touch controls.',
     category: 'audio',
-    imageUrl: 'https://picsum.photos/400/300?random=7',
+    imageUrl: '/photo/Echo Orb Speaker.jpg',
     stock: 11
   },
   {
@@ -70,7 +70,7 @@ const products = [
     price: 24.0,
     description: 'Micro-textured mouse surface with RGB edge lighting and wireless mouse charging pad.',
     category: 'accessories',
-    imageUrl: 'https://picsum.photos/400/300?random=8',
+    imageUrl: '/photo/Prism Mousepad.jpg',
     stock: 60
   },
   {
@@ -79,7 +79,7 @@ const products = [
     price: 159.5,
     description: 'Adjustable monitor stand with integrated cable management and ambient backlight.',
     category: 'desk',
-    imageUrl: 'https://picsum.photos/400/300?random=9',
+    imageUrl: '/photo/Vertex Monitor Stand.jpg',
     stock: 8
   },
   {
@@ -88,7 +88,7 @@ const products = [
     price: 69.99,
     description: 'Desk wearable sensor for posture and active break reminders with subtle LED feedback.',
     category: 'accessories',
-    imageUrl: 'https://picsum.photos/400/300?random=10',
+    imageUrl: '/photo/Pulse Health Monitor.jpg',
     stock: 20
   }
 ];

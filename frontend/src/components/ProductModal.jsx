@@ -3,8 +3,12 @@ import React, { useEffect } from 'react';
 export default function ProductModal({ product, onClose, onAdd }) {
   if (!product) return null;
 
-  const placeholder = 'https://via.placeholder.com/400x300?text=No+Image';
+  const placeholder = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2224%22 fill=%22%23999%22%3ENo Image%3C/text%3E%3C/svg%3E';
   const productImage = product.imageUrl || product.image || placeholder;
+
+  function handleImageError(e) {
+    e.target.src = placeholder;
+  }
 
   useEffect(() => {
     function onKey(e) {
@@ -30,7 +34,7 @@ export default function ProductModal({ product, onClose, onAdd }) {
         <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
         <div className="modal-body">
           <div className="modal-image">
-            <img src={productImage} alt={product.name} />
+            <img src={productImage} alt={product.name} onError={handleImageError} />
           </div>
           <div className="modal-content">
             <h2>{product.name}</h2>
