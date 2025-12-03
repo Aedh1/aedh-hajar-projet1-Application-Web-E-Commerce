@@ -36,6 +36,8 @@ export function CartProvider({ children }) {
   // Accept either a product object or a productId
   async function addToCart(productOrId, quantity = 1) {
     const productId = typeof productOrId === 'object' && productOrId !== null ? productOrId.id : productOrId;
+    const product = typeof productOrId === 'object' && productOrId !== null ? productOrId : null;
+    
     try {
       const res = await fetch('/api/cart', {
         method: 'POST',
@@ -44,7 +46,18 @@ export function CartProvider({ children }) {
       });
       if (!res.ok) throw new Error('Échec ajout au panier');
       const data = await res.json();
-      setCartItems(data.items || []);
+      
+      // If we have the product object, enrich cart items with product details including imageUrl
+      let items = data.items || [];
+      if (product) {
+        items = items.map(item => 
+          item.product && item.product.id === product.id 
+            ? { ...item, product: { ...item.product, ...product } }
+            : item
+        );
+      }
+      
+      setCartItems(items);
       setError(null);
       // Show toast notification
       addToast('Produit ajouté au panier', 2500);

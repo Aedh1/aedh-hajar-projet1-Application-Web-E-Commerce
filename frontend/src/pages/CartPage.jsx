@@ -8,7 +8,15 @@ export default function CartPage() {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, clearCart, subtotal, total } = useCart();
 
-  const placeholder = 'https://via.placeholder.com/160x120?text=Product';
+  const placeholder = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22120%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22160%22 height=%22120%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214%22 fill=%22%23999%22%3ENo Image%3C/text%3E%3C/svg%3E';
+
+  function getItemImage(item) {
+    return item.product?.imageUrl || item.product?.image || placeholder;
+  }
+
+  function handleImageError(e) {
+    e.target.src = placeholder;
+  }
 
   return (
     <div className="container page-fade">
@@ -23,7 +31,7 @@ export default function CartPage() {
             {cartItems.map((i) => (
               <motion.div className="cart-item" key={i.product.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}>
                 <div className="cart-item-image">
-                  <img src={i.product.image || placeholder} alt={i.product.name} />
+                  <img src={getItemImage(i)} alt={i.product.name} onError={handleImageError} />
                 </div>
 
                 <div className="cart-item-details">
