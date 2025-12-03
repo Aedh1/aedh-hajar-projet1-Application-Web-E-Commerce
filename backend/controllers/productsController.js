@@ -1,5 +1,7 @@
 const { products } = require('../utils/data');
-const { v4: uuidv4 } = require('uuid');
+
+// Simple UUID generation for new products
+const generateId = () => 'prod-' + Math.random().toString(36).substr(2, 9);
 
 exports.listProducts = async (req, res) => {
   res.json(products);
@@ -15,7 +17,7 @@ exports.getProduct = async (req, res) => {
 exports.createProduct = async (req, res) => {
   const { name, price, description } = req.body;
   if (!name || !price) return res.status(400).json({ message: 'Invalid payload' });
-  const newP = { id: uuidv4(), name, price, description: description || '' };
+  const newP = { id: generateId(), name, price, description: description || '' };
   products.push(newP);
   res.status(201).json(newP);
 };

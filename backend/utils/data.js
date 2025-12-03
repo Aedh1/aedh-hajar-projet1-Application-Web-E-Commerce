@@ -1,8 +1,6 @@
-const { v4: uuidv4 } = require('uuid');
-
 const products = [
   {
-    id: uuidv4(),
+    id: 'prod-lamp',
     name: 'Nebula Desk Lamp',
     price: 89.0,
     description: 'Sculptural desk lamp with gradient LED panel and touch dimmer. Warm-to-cool color temperature with memory presets.',
@@ -11,7 +9,7 @@ const products = [
     stock: 12
   },
   {
-    id: uuidv4(),
+    id: 'prod-keyboard',
     name: 'Quantum Mechanical Keyboard',
     price: 199.0,
     description: 'Low-profile mechanical keyboard with haptic feedback, programmable layers and per-key RGB. Aluminum frame.',
@@ -20,7 +18,7 @@ const products = [
     stock: 7
   },
   {
-    id: uuidv4(),
+    id: 'prod-soundbar',
     name: 'Aurora Soundbar',
     price: 249.99,
     description: 'Slim soundbar with spatial audio simulation, wireless subwoofer support and adaptive room EQ.',
@@ -29,7 +27,7 @@ const products = [
     stock: 5
   },
   {
-    id: uuidv4(),
+    id: 'prod-charger',
     name: 'Orbit Wireless Charger',
     price: 49.5,
     description: 'Magnetic fast wireless charger with ambient glow and anti-slip surface. Works with Qi devices.',
@@ -38,7 +36,7 @@ const products = [
     stock: 24
   },
   {
-    id: uuidv4(),
+    id: 'prod-holopad',
     name: 'Holo Pad 12"',
     price: 329.0,
     description: 'Ultra-thin secondary display with holographic finish, USB-C powered and adjustable tilt.',
@@ -47,7 +45,7 @@ const products = [
     stock: 4
   },
   {
-    id: uuidv4(),
+    id: 'prod-ledstrip',
     name: 'Lumen LED Strip',
     price: 39.99,
     description: 'Modular LED strip with app-controlled gradients, synchronizes with audio and animations.',
@@ -56,7 +54,7 @@ const products = [
     stock: 40
   },
   {
-    id: uuidv4(),
+    id: 'prod-speaker',
     name: 'Echo Orb Speaker',
     price: 119.0,
     description: 'Compact spherical speaker delivering 360° sound with deep bass and touch controls.',
@@ -65,7 +63,7 @@ const products = [
     stock: 11
   },
   {
-    id: uuidv4(),
+    id: 'prod-mousepad',
     name: 'Prism Mousepad',
     price: 24.0,
     description: 'Micro-textured mouse surface with RGB edge lighting and wireless mouse charging pad.',
@@ -74,7 +72,7 @@ const products = [
     stock: 60
   },
   {
-    id: uuidv4(),
+    id: 'prod-stand',
     name: 'Vertex Monitor Stand',
     price: 159.5,
     description: 'Adjustable monitor stand with integrated cable management and ambient backlight.',
@@ -83,7 +81,7 @@ const products = [
     stock: 8
   },
   {
-    id: uuidv4(),
+    id: 'prod-monitor',
     name: 'Pulse Health Monitor',
     price: 69.99,
     description: 'Desk wearable sensor for posture and active break reminders with subtle LED feedback.',
