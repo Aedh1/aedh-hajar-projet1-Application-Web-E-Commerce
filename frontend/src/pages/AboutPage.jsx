@@ -4,12 +4,12 @@ export default function AboutPage() {
   return (
     <div className="container page-fade">
       <div className="about-page">
-        <h1>About Ecommerce Store</h1>
+        <h1>About Amazon Gaming</h1>
 
         <section className="about-section">
           <h2>À propos</h2>
           <p>
-            Ecommerce Store est une application e-commerce de démonstration conçue pour illustrer les
+            Amazon Gaming est une application e-commerce de démonstration conçue pour illustrer les
             meilleures pratiques du développement web moderne. Elle combine un backend robuste avec une
             interface utilisateur réactive et intuitive.
           </p>

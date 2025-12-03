@@ -9,7 +9,7 @@ export default function Layout({ children }) {
   return (
     <div>
       <header className="header">
-        <div className="logo">Futurist Design Store</div>
+        <div className="logo">Amazon Gaming</div>
         <nav className="nav">
           <NavLink to="/" className="nav-item" end>
             Catalog
@@ -28,7 +28,7 @@ export default function Layout({ children }) {
         {children}
       </main>
 
-      <footer className="footer">© {new Date().getFullYear()} Futurist Design Store. All rights reserved.</footer>
+      <footer className="footer">© {new Date().getFullYear()} Amazon Gaming. All rights reserved.</footer>
     </div>
   );
 }
