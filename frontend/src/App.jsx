@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import ToastContainer from './components/ToastContainer';
+import CatalogPage from './pages/CatalogPage';
+import CartPage from './pages/CartPage';
+import AboutPage from './pages/AboutPage';
+import CheckoutPage from './pages/CheckoutPage';
+import PaymentConfirmationPage from './pages/PaymentConfirmationPage';
+import productsFallback from './data/products';
 import './styles.css';
 
 export default function App() {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState({ items: [] });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchProducts();
-    fetchCart();
   }, []);
 
   async function fetchProducts() {
@@ -22,59 +28,26 @@ export default function App() {
       setProducts(data);
     } catch (err) {
       setError(err.message);
+      // fallback to bundled demo products when API is unavailable
+      setProducts(productsFallback);
     } finally {
       setLoading(false);
     }
   }
 
-  async function fetchCart() {
-    try {
-      const res = await fetch('/api/cart');
-      if (!res.ok) return;
-      const data = await res.json();
-      setCart(data);
-    } catch (err) {
-      // ignore
-    }
-  }
-
-  async function addToCart(productId) {
-    try {
-      const res = await fetch('/api/cart/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, quantity: 1 })
-      });
-      if (!res.ok) throw new Error('Échec ajout au panier');
-      const data = await res.json();
-      setCart(data);
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-
-  const itemCount = cart.items ? cart.items.reduce((s, i) => s + (i.quantity || 0), 0) : 0;
+  // cart is provided by CartContext now
 
   return (
-    <Layout cartCount={itemCount}>
-      <div className="container">
-        <h2>Produits</h2>
-        {loading && <p>Chargement…</p>}
-        {error && <p className="error">{error}</p>}
-
-        <div className="grid">
-          {products.map((p) => (
-            <div className="card" key={p.id}>
-              <h3>{p.name}</h3>
-              <p className="desc">{p.description}</p>
-              <div className="meta">
-                <strong className="price">{p.price} €</strong>
-                <button className="btn" onClick={() => addToCart(p.id)}>Ajouter</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<CatalogPage products={products} loading={loading} error={error} />} />
+        <Route path="/catalog" element={<CatalogPage products={products} loading={loading} error={error} />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/payment-confirmation" element={<PaymentConfirmationPage />} />
+        <Route path="/about" element={<AboutPage />} />
+      </Routes>
+      <ToastContainer />
     </Layout>
   );
 }
