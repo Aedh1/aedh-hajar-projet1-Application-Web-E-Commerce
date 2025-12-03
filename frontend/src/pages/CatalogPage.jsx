@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../CartContext';
-import ProductModal from '../components/ProductModal';
 import { motion } from 'framer-motion';
 
 export default function CatalogPage({ products = [], loading, error }) {
   const [quantities, setQuantities] = useState({});
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
-  const [selected, setSelected] = useState(null);
 
   function setQuantity(id, value) {
     setQuantities((q) => ({ ...q, [id]: Math.max(1, Number(value) || 1) }));
@@ -76,7 +76,7 @@ export default function CatalogPage({ products = [], loading, error }) {
               }}
               whileHover={{ scale: 1.02 }}
               style={{ originY: 0.5 }}
-              onClick={() => setSelected(p)}
+              onClick={() => navigate(`/product/${p.id}`)}
             >
               <div className="product-image">
                 <img src={getProductImage(p)} alt={p.name} onError={handleImageError} />
@@ -100,8 +100,6 @@ export default function CatalogPage({ products = [], loading, error }) {
           );
         })}
       </motion.div>
-
-      <ProductModal product={selected} onClose={() => setSelected(null)} onAdd={(prod, qty) => { addToCart(prod, qty); setSelected(null); }} />
     </div>
   );
 }

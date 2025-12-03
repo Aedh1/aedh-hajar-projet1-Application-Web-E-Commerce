@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import ToastContainer from './components/ToastContainer';
 import CatalogPage from './pages/CatalogPage';
+import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import AboutPage from './pages/AboutPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -42,6 +43,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<CatalogPage products={products} loading={loading} error={error} />} />
         <Route path="/catalog" element={<CatalogPage products={products} loading={loading} error={error} />} />
+        <Route path="/product/:id" element={<ProductPage products={products} />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/payment-confirmation" element={<PaymentConfirmationPage />} />
