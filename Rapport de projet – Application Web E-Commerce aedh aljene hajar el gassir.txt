@@ -1,0 +1,371 @@
+1. Contexte et objectifs
+
+Dans le cadre de l’atelier “Coder avec l’IA Générative”, l’objectif était de développer une application web E-Commerce complète tout en utilisant des assistants de code basés sur l’IA (GitHub Copilot, TabNine, éventuellement IntelliCode) pour :
+
+Accélérer le développement tout en gardant un code propre et lisible
+
+Mettre en place une base de données (SQLite) pour persister les commandes
+
+Générer des tests unitaires / TNR et des tests de sécurité avec l’aide de l’IA
+
+Automatiser la documentation (commentaires, README, etc.)
+
+L’application réalisée suit l’architecture proposée dans le support :
+
+Backend : Node.js + Express
+
+Base de données : SQLite (persistance des commandes)
+
+Frontend : React (hooks)
+
+Tests : Jest, Supertest et tests de non-régression (TNR) sur les endpoints clés
+
+Les produits restent servis par l’API en mémoire comme demandé, mais les commandes sont désormais enregistrées en SQLite, avec une page dédiée dans le frontend : “Commandes effectuées”.
+
+2. Présentation de l’application développée
+
+Fonctionnalités principales :
+
+Catalogue produits : affichage des articles “gaming” (API en mémoire)
+
+Panier : ajout, suppression, calcul des totaux
+
+Checkout : confirmation de commande
+
+Base SQLite :
+
+Table orders (client, total, date…)
+
+Table order_items (détail des lignes de commande)
+
+Endpoint d’historique :
+
+POST /api/checkout : enregistre la commande dans SQLite
+
+GET /api/orders : liste toutes les commandes + items
+
+Frontend React :
+
+Lien “Commandes effectuées” dans le header
+
+Page OrdersHistoryPage qui consomme GET /api/orders et affiche les commandes
+
+3. Utilisation de GitHub Copilot : prompts clés
+3.1. Mise en place de la base SQLite pour les commandes
+
+Pour créer le module de base de données (backend/db/sqlite.js) qui gère orders et order_items, j’ai utilisé Copilot Chat avec un prompt de ce type :
+
+Prompt 1 – Création BDD SQLite
+« Ouvre backend/db/sqlite.js.
+Je veux créer une base SQLite pour persister les commandes E-Commerce.
+Tâches :
+
+Créer la connexion SQLite (fichier de base data/orders.db).
+
+Créer deux tables si elles n’existent pas :
+
+orders(id, customer_name, customer_email, total_amount, created_at)
+
+order_items(id, order_id, product_id, product_name, quantity, price)
+
+Exposer des fonctions : createOrder(db, orderData, items) et getAllOrders(db).
+
+Gérer les erreurs (try/catch) et retourner des promesses.
+Fournis tout le code du module. »
+
+Copilot a généré la structure SQLite, que j’ai relue, simplifiée et adaptée (nom des colonnes, gestion des dates, gestion des erreurs).
+
+3.2. Route de checkout + enregistrement de la commande
+
+Pour connecter la BDD au process de paiement, j’ai utilisé Copilot sur le contrôleur du panier :
+
+Prompt 2 – Route POST /api/checkout
+« Ouvre backend/controllers/cartController.js et le module backend/db/sqlite.js.
+Je veux que, quand l’utilisateur confirme sa commande (checkout), la commande soit enregistrée en base dans SQLite.
+Tâches :
+
+Créer une route POST /api/checkout (dans backend/routes/cart.js ou un nouveau routes/orders.js) qui :
+
+lit name, email, address depuis le body,
+
+récupère le contenu du panier (items + total),
+
+appelle createOrder(db, …) pour insérer dans SQLite,
+
+vide le panier si succès,
+
+retourne { message: "Commande enregistrée", order }.
+
+Ne modifie pas la gestion des produits (toujours récupérés à partir de l’API en mémoire).
+
+Si l’enregistrement échoue, renvoie 500 avec { message: "Erreur lors de l’enregistrement de la commande" }.
+Écris tout le code nécessaire (route + contrôleur) en respectant la structure actuelle. »
+
+Copilot a proposé :
+
+Une fonction checkout dans le contrôleur
+
+La route router.post("/checkout", checkout)
+
+L’appel à createOrder avec les bons paramètres
+
+J’ai ensuite :
+
+Vérifié la cohérence avec les modèles de panier existants
+
+Ajouté une validation minimale des champs (name/email)
+
+Testé l’API avec Postman / curl
+
+3.3. Endpoint d’historique : GET /api/orders
+
+Pour afficher les commandes stockées, j’ai demandé :
+
+Prompt 3 – Endpoint /api/orders
+« Je veux ajouter un endpoint pour consulter les commandes enregistrées en base.
+Tâches :
+
+Créer backend/controllers/ordersController.js avec une fonction getAllOrders qui utilise getAllOrders(db) de sqlite.js et retourne :
+[
+  {
+    id,
+    customer_name,
+    customer_email,
+    total_amount,
+    created_at,
+    items: [
+      { product_id, product_name, quantity, price }
+    ]
+  }
+]
+Créer backend/routes/orders.js avec la route GET /api/orders.
+
+Monter ces routes dans app.js ou backend/routes/index.js sous /api/orders sans casser /api/products et /api/cart.
+
+Ajouter un petit commentaire “// endpoint d’historique des commandes”.
+Écris tout le code nécessaire. »
+
+Copilot a généré :
+
+Le contrôleur avec getAllOrders
+
+La route Express dédiée
+
+L’export / montage de la route dans le routeur principal
+
+J’ai vérifié le format JSON retourné dans le frontend pour que la page React puisse s’en servir directement.
+
+3.4. Page React “Commandes effectuées”
+
+Pour la partie frontend, j’ai utilisé plusieurs prompts.
+
+a) Lien dans le header
+
+Prompt 4 – Lien dans le header
+« Ouvre src/components/Layout.jsx.
+Je veux ajouter un lien “Commandes effectuées” dans le header, à côté de Catalog / Panier.
+Tâches :
+
+Ajouter <NavLink to="/orders">Commandes effectuées</NavLink>.
+
+Réutiliser les mêmes classes CSS que les autres liens de navigation.
+
+Ne pas casser les liens existants. »
+
+b) Page OrdersHistoryPage
+
+Prompt 5 – Page OrdersHistoryPage
+« Crée un composant src/pages/OrdersHistoryPage.jsx.
+Tâches :
+
+Utiliser useEffect + fetch("/api/orders") pour récupérer la liste des commandes.
+
+Gérer les états : chargement, erreur, aucune commande.
+
+Afficher chaque commande dans une carte avec : id, nom, email, date, total, puis la liste des items (nom produit, quantité, prix unitaire).
+
+Réutiliser les classes CSS existantes (cards, containers) pour rester cohérent avec le reste du site Amazon-gaming.
+
+Dans src/App.jsx, ajouter la route React Router path="/orders" avec element={<OrdersHistoryPage />}.
+Fais toutes les modifications nécessaires. »
+
+Résultat :
+
+Page fonctionnelle affichant l’historique
+
+Gestion de l’état de chargement
+
+Gestion du cas aucune commande enregistrée
+
+4. Génération de tests, TNR et sécurité
+4.1. Tests unitaires (Jest + Supertest) pour /api/orders
+
+Conformément au support (fichier generate-unit-tests.prompt.md et commande /generate-unit-tests), j’ai utilisé Copilot pour générer des tests unitaires / d’intégration pour l’API des commandes.
+
+Prompt 6 – Tests Jest API commandes
+« Je veux des tests Jest pour l’API des commandes.
+Tâches :
+
+Créer backend/tests/orders.test.js.
+
+Tester que GET /api/orders renvoie un status 200.
+
+Tester que GET /api/orders renvoie un tableau (même vide) par défaut.
+
+Après un POST /api/checkout avec une commande valide, vérifier que GET /api/orders contient au moins une commande.
+
+Utiliser supertest comme dans les autres tests (cart.test.js, products.test.js) et respecter leur style (describe, it).
+Génère le fichier de test complet. »
+
+Copilot a généré des tests que j’ai :
+
+Adaptés au schéma de la BDD SQLite
+
+Ajustés pour l’initialisation / nettoyage (avant/après chaque test)
+
+Utilisés comme tests de non-régression (TNR) :
+
+Après chaque évolution du backend (BDD, nouvelles routes), je relançais la suite Jest pour vérifier qu’aucun comportement existant n’était cassé.
+
+4.2. Tests de sécurité (audit rapide)
+
+Pour la partie sécurité, j’ai utilisé deux approches :
+
+TabNine – commande personnalisée (conceptuelle)
+
+Fichier .tabnine_commands avec une commande de type check-security (inspirée du support) pour pointer les zones à risque : dépendances, fonctions dangereuses, etc.
+Prompts d’audit dans Copilot Chat sur les fichiers sensibles (routes, contrôleurs) :
+
+Prompt 7 – Audit sécurité backend
+« Analyse ce fichier Node.js (routes et contrôleurs).
+Tâches :
+
+Signaler les éventuels risques de sécurité (injection, exposition de données sensibles, manque de validation).
+
+Proposer des améliorations simples :
+
+validations des champs name / email,
+
+messages d’erreur génériques,
+
+éviter d’exposer des stack traces.
+Donne moi un résumé + suggestions de patch. »
+
+Ce type de prompt m’a permis :
+
+De vérifier que les champs envoyés par le frontend étaient au minimum validés
+
+De ne pas logguer directement des informations trop sensibles
+
+De garder des messages d’erreur simples côté API (pas de fuite de détails internes)
+
+5. Documentation et commentaires générés par l’IA
+
+L’IA a aussi été utilisée pour améliorer la lisibilité du code :
+
+5.1. Commentaires / JSDoc
+
+Sur plusieurs fonctions backend (ex : checkout, getAllOrders, createOrder), j’ai demandé à Copilot :
+
+Prompt 8 – Commentaires JSDoc
+« Ajoute des commentaires JSDoc au-dessus de ces fonctions pour décrire clairement :
+
+Le rôle de la fonction
+
+Les paramètres
+
+La valeur de retour
+
+Les erreurs possibles
+Les commentaires doivent être en français, concis et compréhensibles pour un étudiant. »
+
+Résultat :
+
+Des commentaires standardisés
+
+Une meilleure compréhension rapide pour le professeur / les autres développeurs
+
+5.2. README et explications projet
+
+Pour le README, j’ai utilisé :
+
+Prompt 9 – Génération du README
+« Génère un README pour ce projet E-Commerce “Amazon-Gaming”.
+Le README doit contenir :
+
+description du projet
+
+stack technique (Node/Express, React, SQLite)
+
+instructions d’installation (backend / frontend)
+
+commandes de test
+
+une section “Utilisation de l’IA générative (Copilot, TabNine)” expliquant comment les outils ont aidé à développer le projet.
+Le texte doit être en français. »
+
+J’ai ensuite relu et légèrement modifié le README pour qu’il colle à la réalité de mon repo Git.
+
+6. Bonnes pratiques et limites rencontrées
+
+Conformément au support, j’ai appliqué les principes suivants :
+
+Ne jamais accepter aveuglément une suggestion :
+
+Toutes les propositions de Copilot / TabNine ont été relues, testées et parfois refactorées.
+
+Responsabilité et sécurité :
+
+Pas de mots de passe, ni clé API en clair dans le code.
+
+Validation minimale des données côté backend.
+
+Tests systématiques :
+
+Lancement régulier de Jest + Supertest après les grosses modifications (BDD, routes).
+
+Limites observées :
+
+L’IA propose parfois du code générique qui ne correspond pas exactement à la structure du projet (import incorrect, nom de fonction différent).
+
+Pour les requêtes SQL, il faut être très vigilant (jointures, noms de champs, gestion des erreurs).
+
+7. Bilan et apport de l’IA générative
+
+L’utilisation de GitHub Copilot et TabNine a permis :
+
+De gagner du temps sur la rédaction des fonctions standard (routes Express, hooks React, modèles BDD)
+
+De structurer plus rapidement :
+
+le module SQLite (sqlite.js)
+
+les endpoints /api/checkout et /api/orders
+
+la page React OrdersHistoryPage
+
+De générer des tests unitaires / TNR cohérents avec les bonnes pratiques GitHub (AAA, noms explicites, couverture des cas d’erreur)
+
+De penser plus tôt à la sécurité (audit de code, validation d’entrées)
+
+D’améliorer la documentation (JSDoc, README)
+
+Mais l’IA est restée un assistant :
+
+Le design global, les choix d’architecture et les validations finales ont été faits manuellement.
+
+Chaque suggestion a été vérifiée, testée et parfois corrigée avant d’être committée.
+
+Conclusion
+
+Le projet “Amazon-Gaming” répond aux objectifs du Projet 1 : Application Web E-Commerce du support, avec en plus :
+
+Une intégration concrète d’une base SQLite pour les commandes
+
+Un historique des commandes accessible via le frontend
+
+Des tests unitaires/TNR pour sécuriser les endpoints
+
+Des tests de sécurité et une documentation enrichie par l’IA
+
+Ce travail montre que l’IA générative peut réellement augmenter la productivité et la qualité du code, à condition de garder une posture critique et de rester responsable dans son utilisation.
